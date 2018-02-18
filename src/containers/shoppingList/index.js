@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { itemsFetchData, newItem, toggleStatus, deleteItem } from '../../actions/shoppingList';
 import ListItem from '../../components/listItem';
+import NewItem from '../../components/newItem';
 
 class ShoppingList extends Component {
 
@@ -21,7 +22,6 @@ class ShoppingList extends Component {
     this.props.fetchItems('http://localhost:3000/api/items');
     // this.props.postNewItem('http://localhost:3000/api/items', { "name": "test12231312345"} )
     // this.props.toggleItemStatus('http://localhost:3000/api/items', '5a874a3d3cb808cec5976fa2' );
-    this.props.deleteItem('http://localhost:3000/api/items', '5a8749ecb2547ccea3978b6c' );
   }
 
   renderSeparator = () => {
@@ -36,8 +36,16 @@ class ShoppingList extends Component {
     );
   };
 
-  toggleCheckBox = () => {
-    console.log('t66ytab');
+  toggleCheckBox = (id) => {
+    this.props.toggleItemStatus('http://localhost:3000/api/items', id );
+  }
+
+  deleteItem = (id) => {
+    this.props.deleteItem('http://localhost:3000/api/items', id );
+  }
+
+  saveNewItem = (item) => {
+    this.props.postNewItem('http://localhost:3000/api/items', { "name": item} )
   }
 
   render() {
@@ -55,9 +63,11 @@ class ShoppingList extends Component {
               data={this.props.items}
               renderItem={({ item }) => (
                 <ListItem
+                  status={item.status}
                   title={item.name}
                   toggleItemsStatus={item.status}
-                  toggleCheckbox={(name,checked) =>( this.toggleCheckBox() )}
+                  toggleCheckbox={() =>( this.toggleCheckBox(item._id) )}
+                  deleteItem={() =>( this.deleteItem(item._id) )}
                 />
               )}
               ItemSeparatorComponent={this.renderSeparator}
@@ -65,7 +75,7 @@ class ShoppingList extends Component {
         </View>
 
         <View style={ styles.addNewItem }>
-
+          <NewItem saveNewItem={(item) =>( this.saveNewItem(item) )}/>
         </View>
 
       </View>
@@ -89,7 +99,6 @@ function mapDispatchToProps(dispatch) {
     postNewItem: (url, data) => dispatch(newItem(url, data)),
     toggleItemStatus: (url, id) => dispatch(toggleStatus(url, id)),
     deleteItem: (url, id) => dispatch(deleteItem(url, id))
-
   };
 }
 
@@ -102,15 +111,15 @@ const styles = StyleSheet.create({
   },
   navigation: {
     backgroundColor: 'blue',
-    flex: 1
+    flex: .2
   },
   displayItems: {
-    flex: 4,
+    flex: 2,
     backgroundColor: 'yellow'
   },
   addNewItem: {
-    flex: 1,
-    backgroundColor: 'red'
+    flex: .2,
+    // backgroundColor: 'red'
   },
   item: {
     color: 'white',
