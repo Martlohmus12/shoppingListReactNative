@@ -6,9 +6,10 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList
+  FlatList,
+  Platform
 } from 'react-native';
-import { itemsFetchData, newItem, toggleStatus, deleteItem } from '../../actions/shoppingList';
+import { fetchItems, newItem, toggleStatus, deleteItem } from '../../actions/shoppingList';
 import ListItem from '../../components/listItem';
 import NewItem from '../../components/newItem';
 
@@ -19,9 +20,7 @@ class ShoppingList extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchItems('http://localhost:3000/api/items');
-    // this.props.postNewItem('http://localhost:3000/api/items', { "name": "test12231312345"} )
-    // this.props.toggleItemStatus('http://localhost:3000/api/items', '5a874a3d3cb808cec5976fa2' );
+    this.props.fetchAllItems('http://localhost:3000/api/items');
   }
 
   renderSeparator = () => {
@@ -36,48 +35,46 @@ class ShoppingList extends Component {
     );
   };
 
-  toggleCheckBox = (id) => {
-    this.props.toggleItemStatus('http://localhost:3000/api/items', id );
+  toggleCheckBox = (id, checked) => {
+    this.props.toggleItemStatus('http://localhost:3000/api/items', id, checked);
   }
 
   deleteItem = (id) => {
-    this.props.deleteItem('http://localhost:3000/api/items', id );
+    this.props.deleteItem('http://localhost:3000/api/items', id);
   }
 
   saveNewItem = (item) => {
-    this.props.postNewItem('http://localhost:3000/api/items', { "name": item} )
+    this.props.postNewItem('http://localhost:3000/api/items', item )
   }
 
   render() {
     const { items = [] } = this.props;
 
     return (
-      <View style={ styles.container }>
-
-        <View style={ styles.navigation }>
-
+      <View style={styles.container}>
+        <View style={styles.title}>
+          <Text style={styles.title_text}>Simple shoppinglist</Text>
         </View>
 
-        <View style={ styles.displayItems }>
+        <View style={styles.displayItems}>
           <FlatList
-              data={this.props.items}
-              renderItem={({ item }) => (
-                <ListItem
-                  status={item.status}
-                  title={item.name}
-                  toggleItemsStatus={item.status}
-                  toggleCheckbox={() =>( this.toggleCheckBox(item._id) )}
-                  deleteItem={() =>( this.deleteItem(item._id) )}
-                />
-              )}
-              ItemSeparatorComponent={this.renderSeparator}
+            data={this.props.items}
+            renderItem={({ item }) => (
+              <ListItem
+                status={item.status}
+                title={item.name}
+                toggleItemsStatus={item.status}
+                toggleCheckbox={(name, checked) => (this.toggleCheckBox(item._id, checked))}
+                deleteItem={() => (this.deleteItem(item._id))}
+              />
+            )}
+            ItemSeparatorComponent={this.renderSeparator}
           />
         </View>
 
-        <View style={ styles.addNewItem }>
-          <NewItem saveNewItem={(item) =>( this.saveNewItem(item) )}/>
+        <View style={styles.addNewItem}>
+          <NewItem saveNewItem={(item) => (this.saveNewItem(item))} />
         </View>
-
       </View>
     );
   }
@@ -95,9 +92,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchItems: (url) => dispatch(itemsFetchData(url)),
+    fetchAllItems: (url) => dispatch(fetchItems(url)),
     postNewItem: (url, data) => dispatch(newItem(url, data)),
-    toggleItemStatus: (url, id) => dispatch(toggleStatus(url, id)),
+    toggleItemStatus: (url, id, status) => dispatch(toggleStatus(url, id, status)),
     deleteItem: (url, id) => dispatch(deleteItem(url, id))
   };
 }
@@ -107,11 +104,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(ShoppingList);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    marginTop: (Platform.OS === 'ios') ? 20 : 0,
+    backgroundColor: 'green'
   },
-  navigation: {
-    backgroundColor: 'blue',
-    flex: .2
+  title: {
+    flex: .2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title_text: {
+    fontSize: 20,
+    color: 'white'
   },
   displayItems: {
     flex: 2,
@@ -119,7 +122,6 @@ const styles = StyleSheet.create({
   },
   addNewItem: {
     flex: .2,
-    // backgroundColor: 'red'
   },
   item: {
     color: 'white',

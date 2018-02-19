@@ -4,6 +4,7 @@ import App from './containers/App';
 import configureStore from './configureStore';
 
 const store = configureStore();
+console.disableYellowBox = true;
 
 export default () => (
   <Provider store={store}>
