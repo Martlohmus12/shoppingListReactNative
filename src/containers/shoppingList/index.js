@@ -12,6 +12,7 @@ import {
 import { fetchItems, newItem, toggleStatus, deleteItem } from '../../actions/shoppingList';
 import ListItem from '../../components/listItem';
 import NewItem from '../../components/newItem';
+import config from '../../config.js';
 
 class ShoppingList extends Component {
 
@@ -20,7 +21,7 @@ class ShoppingList extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchAllItems('http://localhost:3000/api/items');
+    this.props.fetchAllItems(config.url);
   }
 
   renderSeparator = () => {
@@ -36,15 +37,15 @@ class ShoppingList extends Component {
   };
 
   toggleCheckBox = (id, checked) => {
-    this.props.toggleItemStatus('http://localhost:3000/api/items',id , checked);
+    this.props.toggleItemStatus(config.url, id , checked);
   }
 
   deleteItem = (id) => {
-    this.props.deleteItem('http://localhost:3000/api/items', id);
+    this.props.deleteItem(config.url, id);
   }
 
   saveNewItem = (item) => {
-    this.props.postNewItem('http://localhost:3000/api/items', item )
+    this.props.postNewItem(config.url, item )
   }
 
   render() {
