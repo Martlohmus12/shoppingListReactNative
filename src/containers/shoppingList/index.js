@@ -36,7 +36,7 @@ class ShoppingList extends Component {
   };
 
   toggleCheckBox = (id, checked) => {
-    this.props.toggleItemStatus('http://localhost:3000/api/items', id, checked);
+    this.props.toggleItemStatus('http://localhost:3000/api/items',id , checked);
   }
 
   deleteItem = (id) => {

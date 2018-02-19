@@ -22,13 +22,13 @@ export function fetchItems(url) {
       .then(function (items) {
         dispatch(receiveAllItems(items));
       })
-      .catch((error) => dispatch(haveErrors(error)));
+      .catch((error) => console.log(error));
   };
 }
 
-export function newItem(url, action) {
+export function newItem(url, name) {
   return function (dispatch) {
-    axios.post(`${url}`, action)
+    axios.post(`${url}`, {"name": name})
       .then(response => {
         dispatch(fetchItems('http://localhost:3000/api/items'));
       })
@@ -36,7 +36,7 @@ export function newItem(url, action) {
 }
 
 export function toggleStatus(url, id, status) {
-  const _url = url + "/" + id + "/" + status;
+  const _url = `${url}/${id}/${status}`;
   return function (dispatch) {
     axios.put(`${_url}`)
       .then(response => {
@@ -46,7 +46,7 @@ export function toggleStatus(url, id, status) {
 }
 
 export function deleteItem(url, id) {
-  const _url = url + "/" + id;
+  const _url = `${url}/${id}`;
   return function (dispatch) {
     axios.delete(`${_url}`, null)
       .then(response => {
@@ -55,3 +55,6 @@ export function deleteItem(url, id) {
   }
 }
 
+filterCheckedItems = (items) => {
+  return items.filter(item => item.status == false);
+}
