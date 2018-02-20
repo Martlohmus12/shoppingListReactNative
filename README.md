@@ -2,6 +2,8 @@
 
 > React Native, redux
 
+![Alt text](img.png?raw=true "picture of the app")
+
 ## Installation
 
 ```bash
