@@ -14,6 +14,7 @@ import { fetchItems, newItem, toggleStatus, deleteItem } from '../../actions/sho
 import ListItem from '../../components/listItem';
 import NewItem from '../../components/newItem';
 import config from '../../config.js';
+import DropdownAlert from 'react-native-dropdownalert';
 
 class ShoppingList extends Component {
 
@@ -51,7 +52,9 @@ class ShoppingList extends Component {
 
   render() {
     const { items = [], message = '' } = this.props;
-
+    if(message){
+      this.dropdown.alertWithType('success', '', message);
+    }
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -80,6 +83,9 @@ class ShoppingList extends Component {
         <View style={styles.addNewItem}>
           <NewItem saveNewItem={(item) => (this.saveNewItem(item))} />
         </View>
+
+        <DropdownAlert ref={ref => this.dropdown = ref} closeInterval={1000}/>
+
       </KeyboardAvoidingView>
     );
   }
