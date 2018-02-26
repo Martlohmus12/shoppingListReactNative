@@ -7,7 +7,8 @@ import {
   Text,
   View,
   FlatList,
-  Platform
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native';
 import { fetchItems, newItem, toggleStatus, deleteItem } from '../../actions/shoppingList';
 import ListItem from '../../components/listItem';
@@ -49,10 +50,13 @@ class ShoppingList extends Component {
   }
 
   render() {
-    const { items = [] } = this.props;
+    const { items = [], message = '' } = this.props;
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        >
         <View style={styles.title}>
           <Text style={styles.title_text}>Simple shoppinglist</Text>
         </View>
@@ -76,7 +80,7 @@ class ShoppingList extends Component {
         <View style={styles.addNewItem}>
           <NewItem saveNewItem={(item) => (this.saveNewItem(item))} />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -88,6 +92,7 @@ ShoppingList.PropTypes = {
 function mapStateToProps(state) {
   return {
     items: state.shoppingItems.items,
+    message: state.shoppingItems.message
   };
 }
 
