@@ -7,7 +7,7 @@ import {
   Button,
   TextInput,
   TouchableHighlight,
-  Icon
+  Keyboard
 } from 'react-native';
 
 export default class NewItem extends Component {
@@ -20,6 +20,7 @@ export default class NewItem extends Component {
   submitItem = () => {
     this.props.saveNewItem(this.state.text);
     this.textInput.clear();
+    Keyboard.dismiss();
   }
   render() {
     return (
