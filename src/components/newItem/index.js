@@ -17,6 +17,10 @@ export default class NewItem extends Component {
     this.state = { text: '' };
   }
 
+  submitItem = () => {
+    this.props.saveNewItem(this.state.text);
+    this.textInput.clear();
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -27,6 +31,8 @@ export default class NewItem extends Component {
             onChangeText={(text) => this.setState({ text })}
             placeholder='New item'
             keyboardType='web-search'
+            autoCorrect={false}
+            onSubmitEditing = {this.submitItem}
             ref={input => { this.textInput = input }}
           />
         </View>
@@ -34,10 +40,7 @@ export default class NewItem extends Component {
         <View style={styles.newItemInputView}>
           <TouchableHighlight
             style={styles.NewItemInput}
-            onPress={() => {
-              this.props.saveNewItem(this.state.text)
-              this.textInput.clear()
-            }}
+            onPress={this.submitItem}
             underlayColor='transparent'>
             <View>
               <Text style={styles.plusSign}>+</Text>
